@@ -1,0 +1,24 @@
+<!-- views/app.ejs -->
+<html>
+  <meta charset="utf-8" />
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+
+  </head>
+  <body>
+  <p>
+    Stwórz swój własny pokój<br>
+    ID twojego pokoju <%= context.id %>
+  </p>
+  <p> 
+    <form action="/create", method="POST">
+      <label for="password">Hasło</label>
+      <input id="password" type="text" name="password" value="<%= context.password%>">
+      
+
+
+      <button>Utwórz</button>
+    </form>
+  </p>
+  </body>
+</html>

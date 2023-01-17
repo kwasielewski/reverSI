@@ -1,0 +1,27 @@
+<!-- views/app.ejs -->
+<html>
+  <meta charset="utf-8" />
+  <head>
+    <script src="/socket.io/socket.io.js"></script>
+
+  </head>
+  <body>
+  ReverSI 
+  <p>
+    <form action="/new", method="GET">
+      <button>Nowy pokój</button>
+    </form>
+  </p>
+  <p>
+    <form action="join", method="POST">
+    <input id="identifier" type="text" name="identifier" value="<%= context.id%>">
+      <button>Dołącz</button>
+    </form>
+  </p>
+  <p> 
+    <form action="/random", method="GET">
+      <button>Losowy pokój</button>
+    </form>
+  </p>
+  </body>
+</html>
