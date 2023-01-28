@@ -3,7 +3,7 @@ var http = require('http');
 var socket = require('socket.io');
 var fs = require('fs');
 var express = require('express');
-var html = fs.readFileSync('./views/app.ejs', 'utf-8');
+var html = fs.readFileSync('./views/main.ejs', 'utf-8');
 
 var app = express();
 
@@ -11,12 +11,19 @@ var server = http.createServer(app);
 var io = socket(server);
 
 app.use( express.static('./static'));
+app.set( 'views', './views' )
 
 app.get('/', function(req, res) {
   res.setHeader('Content-type', 'text/html');
   res.write(html);
   res.end();
 });
+
+app.get('/new', function(req, res) {
+  res.setHeader('Content-type', 'text/html');
+  res.write(fs.readFileSync('./views/new.ejs', 'utf-8'));
+  res.end();
+})
 
 server.listen(process.env.PORT || 3000);
 

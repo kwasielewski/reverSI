@@ -1,0 +1,27 @@
+body {
+    background-color: #d3c9da;
+    font-family: "Courier New", serif;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+button, textarea {
+    font-family: "Courier New", serif;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+table, th, td {
+    border: 1px double #d3c9da;
+    border-collapse: collapse;
+}
+
+th, td {
+    background-color: #280049;
+    color: whitesmoke;
+    padding: 20px;
+}
