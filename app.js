@@ -6,6 +6,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 var express = require('express');
 const e = require('express');
+const { getDefaultSettings } = require('http2');
 var html = fs.readFileSync('./views/main.ejs', 'utf-8');
 
 var app = express();
@@ -42,6 +43,7 @@ app.get('/new', function(req, res) {
   if(!req.context){
     context = {id:0}
     context.id = (Math.floor(Math.random()*1000)+1)
+
   }else{
     context = req.context
   }
@@ -73,7 +75,8 @@ app.post('/join', function(req, res){
   cuartito = rooms.get(parseInt(req.body.identifier))
   console.log(rooms)
   console.log(cuartito)
-  if(!cuartito){
+  if(!cuartito || cuartito.players == 2){
+    console.log("too many players")
     res.render('main', context)
   }else{
     context = {id:parseInt(req.body.identifier)}
@@ -84,7 +87,10 @@ app.post('/join', function(req, res){
 app.post('/joinwithpasswd', function(req, res){
   console.log('in joinwith passwd')
   console.log(context)
-  if(req.body.password == rooms.get(parseInt(context.id))['pass']){
+  cuartito = rooms.get(parseInt(context.id))
+  pswd = cuartito['pass']
+  if(req.body.password == pswd){
+    rooms.set(rooms.set(parseInt(context.id), {pass:pswd, players:2}))
     res.render('defense', context)
   }else{
     res.render('password', context)
@@ -95,12 +101,21 @@ server.listen(process.env.PORT || 3000);
 
 io.on('connection', function(socket) {
   console.log('client connected:' + socket.id);
+  //join
+  let idd = "";
+  socket.on('joinn', function(data){
+    console.log("joining")
+    console.log(data.id)
+    socket.join(data.id);
+    idd = data.id;
+  })
   socket.on('attack', function(data) {
-    io.emit('attack', data); // do wszystkich
-    //socket.emit('chat message', data); tylko do połączonego
+    //io.emit('attack', data); // do wszystkich
+    socket.to(idd).emit('attack', data);// tylko do połączonego
   })
   socket.on('defense', function(data){
-    io.emit('defense', data)
+    //io.emit('defense', data)
+    socket.to(idd).emit('defense', data);
   })
 });
 

@@ -11,6 +11,7 @@
         button.disabled = true;
         msg.innerHTML = "Ruch przeciwnika<br>";
         var socket = io();
+        
         socket.on('attack', function(){
           if(button.disabled){
             button.disabled = false; 
@@ -23,6 +24,7 @@
           msg.innerHTML = "Ruch przeciwnika<br>";
           
         })
+        socket.emit('joinn', {id:'<%= context.id %>'});
       })
     </script>
   </head>
