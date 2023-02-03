@@ -3,17 +3,42 @@
   <meta charset="utf-8" />
   <head>
     <script src="/socket.io/socket.io.js"></script>
+    <script>
 
+      window.addEventListener('load', function(){
+        const button = document.getElementById('myButton');
+        const msg = document.getElementById('messages');
+        button.disabled = true;
+        msg.innerHTML = "Ruch przeciwnika<br>";
+        var socket = io();
+        socket.on('attack', function(){
+          if(button.disabled){
+            button.disabled = false; 
+            msg.innerHTML = "Twój ruch<br>";
+          }
+        })
+        button.addEventListener('click', function(){
+          socket.emit('defense');
+          button.disabled = true; 
+          msg.innerHTML = "Ruch przeciwnika<br>";
+          
+        })
+      })
+    </script>
   </head>
   <body>
   <p>
     ID twojego pokoju <%= context.id %>
   </p>
   <p>
-    Ruch przeciwnika<br>
+    <div id='messages'></div>
   </p>
   <p> 
-    Plansza XD
+    <!-- <form action="/attack", method="POST">-->
+      Plansza XD
+      
+      <button id="myButton">Wykonaj</button>
+    <!--</form>-->
   </p>
   </body>
 </html>

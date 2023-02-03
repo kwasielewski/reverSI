@@ -95,15 +95,18 @@ server.listen(process.env.PORT || 3000);
 
 io.on('connection', function(socket) {
   console.log('client connected:' + socket.id);
-  socket.on('chat message', function(data) {
-    io.emit('chat message', data); // do wszystkich
+  socket.on('attack', function(data) {
+    io.emit('attack', data); // do wszystkich
     //socket.emit('chat message', data); tylko do połączonego
+  })
+  socket.on('defense', function(data){
+    io.emit('defense', data)
   })
 });
 
-setInterval( function() {
+/*setInterval( function() {
   var date = new Date().toString();
   io.emit( 'message', date.toString() );
-}, 1000 );
+}, 1000 );*/
 
 console.log( 'server listens' );
