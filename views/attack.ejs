@@ -2,6 +2,7 @@
 <html>
   <meta charset="utf-8" />
   <head>
+    <link rel="stylesheet" type="text/css" href="main.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
       window.addEventListener('load', function(){
@@ -26,21 +27,52 @@
         socket.emit('joinn', {id:'<%= context.id %>'});
       })
     </script>
+    <script>
+      function drawBoard() {
+        const squareSize = 60;
+
+        let canvas = document.getElementById('canvasBoard');
+        context = canvas.getContext('2d');
+
+        for (let row = 0; row < 8; row++) {
+          for (let col = 0; col < 8; col++) {
+            context.fillStyle = ((row + col) % 2 == 0) ? 'grey' : 'lightgrey';
+            let xOffset = col*squareSize;
+            let yOffset = row*squareSize;
+            context.fillRect(xOffset, yOffset, squareSize, squareSize);
+          }
+        }
+
+        context.beginPath();
+        context.arc(210, 210, 25, 0, 2*Math.PI, false);
+        context.fillStyle = 'white';
+        context.fill();
+
+        context.beginPath();
+        context.arc(270, 210, 25, 0, 2*Math.PI, false);
+        context.fillStyle = 'black';
+        context.fill();
+
+        context.strokeStyle = "black";
+        context.strokeRect(0, 0, squareSize*8, squareSize*8)
+      }
+
+      window.onload = drawBoard;
+    </script>
   </head>
   <body>
-  <p>
-    ID twojego pokoju <%= context.id %>
-  </p>
-  <p>
-    <div id='messages'></div>
-    
-  </p>
-  <p> 
-    <!-- <form action="/attack", method="POST">-->
-      Plansza XD
+    <p>
+      ID twojego pokoju <%= context.id %>
+    </p>
+    <p>
+      <div id='messages'></div>
       
-      <button id="myButton">Wykonaj</button>
-    <!--</form>-->
-  </p>
+    </p>
+    <p> 
+      <!-- <form action="/attack", method="POST">-->
+        <canvas id="canvasBoard" width="800px" height="500px"></canvas>
+        <button id="myButton">Wykonaj</button>
+      <!--</form>-->
+    </p>
   </body>
 </html>
