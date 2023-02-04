@@ -12,14 +12,14 @@
         msg.innerHTML = "Ruch przeciwnika<br>";
         var socket = io();
         
-        socket.on('attack', function(){
+        socket.on('attack', function(arg){
           if(button.disabled){
             button.disabled = false; 
-            msg.innerHTML = "Twój ruch<br>";
+            msg.innerHTML = `Twój ruch<br>${arg + 'G'}`;
           }
         })
         button.addEventListener('click', function(){
-          socket.emit('defense');
+          socket.emit('defense', arg);
           button.disabled = true; 
           msg.innerHTML = "Ruch przeciwnika<br>";
           
@@ -29,18 +29,18 @@
     </script>
   </head>
   <body>
-  <p>
-    ID twojego pokoju <%= context.id %>
-  </p>
-  <p>
-    <div id='messages'></div>
-  </p>
-  <p> 
-    <!-- <form action="/attack", method="POST">-->
-      Plansza XD
-      
-      <button id="myButton">Wykonaj</button>
-    <!--</form>-->
-  </p>
+    <p>
+      ID twojego pokoju <%= context.id %>
+    </p>
+    <p>
+      <div id='messages'></div>
+    </p>
+    <p> 
+      <!-- <form action="/attack", method="POST">-->
+        <canvas id="canvasBoard" width="800px" height="500px"></canvas>
+        <button id="myButton">Wykonaj</button>
+      <!--</form>-->
+    </p>
+    <script src="reversi_gameplay.js"></script>
   </body>
 </html>

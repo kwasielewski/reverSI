@@ -12,14 +12,14 @@
         msg.innerHTML = "Twój ruch<br>";
         var socket = io();
         
-        socket.on('defense', function(){
+        socket.on('defense', function(arg){
           if(button.disabled){
             button.disabled = false; 
-            msg.innerHTML = "Twój ruch<br>";
+            msg.innerHTML = `Twój ruch<br>${arg + 'H'}`;
           }
         })
         button.addEventListener('click', function(){
-          socket.emit('attack');
+          socket.emit('attack', arg);
           button.disabled = true; 
           msg.innerHTML = "Ruch przeciwnika<br>";
           

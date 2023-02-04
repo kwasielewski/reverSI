@@ -5,7 +5,23 @@ let initBoard = [[0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 1, -1, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0]]
+                 [0, 0, 0, 0, 0, 0, 0, 0]]  // this initialization has to be connected to some POST method (and used only once)
+
+function checkCell(board, cellID) {
+    // first recognize what the player clicked
+    // see if this cell can be selected according to game rules
+
+    return true;
+}
+
+function selectCell(board, cellID) {
+    // if the cell is can be selected we:
+    //  - draw an appropriate circle
+    //  - flip the other discs
+    //  - pass the resulting object back to the socket.emit method
+
+    console.log(`Selected cell: ${cellID}`)
+}
 
 function drawBoard() { //board) {
     // ideally we would like to move the scipt for drawing the board here so that both attack & defence can use it
@@ -35,20 +51,19 @@ function drawBoard() { //board) {
         }
     }
 
-    context.strokeStyle = "black";
+    context.strokeStyle = 'black';
     context.strokeRect(0, 0, squareSize*8, squareSize*8)
-}
 
-function checkCell(board, cellID) {
-    // first recognize what the player clicked
-    // see if this cell can be selected according to game rules
-}
-
-function selectCell(board, cellID) {
-    // if the cell is can be selected we:
-    //  - draw an appropriate circle
-    //  - flip the other discs
-    //  - pass the resulting object back to the socket.emit method
+    canvas.onclick = function(event) { // TODO: figure out why this works, but addEventListener doesn't?
+        // make sure the user clicked somewhere "in range"?
+        let cellRow = Math.floor(event.pageY / squareSize);
+        let cellCol = Math.floor(event.pageX / squareSize);
+        console.log('Hello, you clicked!')
+        
+        if (checkCell(initBoard, [cellRow, cellCol])) {
+            selectCell(initBoard, [cellRow, cellCol]);
+        }
+    };
 }
 
 window.onload = drawBoard;
