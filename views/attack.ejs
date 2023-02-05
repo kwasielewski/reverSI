@@ -2,26 +2,26 @@
 <html>
   <meta charset="utf-8" />
   <head>
-    <link rel="stylesheet" type="text/css" href="main.css" />
+    <link rel="stylesheet" type="text/css" href="game.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      window.addEventListener('load', function(){
+      window.addEventListener('load', function(arg){
         let button = document.getElementById('myButton');
         let msg = document.getElementById('messages');
         button.disabled = false;
-        msg.innerHTML = "Twój ruch<br>";
+        msg.innerHTML = `Twój ruch<br>${arg.board}`;
         var socket = io();
         
         socket.on('defense', function(arg){
           if(button.disabled){
             button.disabled = false; 
-            msg.innerHTML = `Twój ruch<br>${arg + 'H'}`;
+            msg.innerHTML = `Twój ruch<br>${arg.board}`;
           }
         })
         button.addEventListener('click', function(){
-          socket.emit('attack', arg);
+          socket.emit('attack', {board: arg.board + 'A'});
           button.disabled = true; 
-          msg.innerHTML = "Ruch przeciwnika<br>";
+          msg.innerHTML = `Ruch przeciwnika<br>${arg.board + 'A'}`;
           
         })
         socket.emit('joinn', {id:'<%= context.id %>'});

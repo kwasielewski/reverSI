@@ -20,7 +20,7 @@ function selectCell(board, cellID) {
     //  - flip the other discs
     //  - pass the resulting object back to the socket.emit method
 
-    console.log(`Selected cell: ${cellID}`)
+    console.log(`Selected cell: ${cellID}`);
 }
 
 function drawBoard() { //board) {

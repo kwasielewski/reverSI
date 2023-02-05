@@ -2,26 +2,27 @@
 <html>
   <meta charset="utf-8" />
   <head>
+    <link rel="stylesheet" type="text/css" href="game.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
 
-      window.addEventListener('load', function(){
+      window.addEventListener('load', function(arg){
         const button = document.getElementById('myButton');
         const msg = document.getElementById('messages');
         button.disabled = true;
-        msg.innerHTML = "Ruch przeciwnika<br>";
+        msg.innerHTML = `Ruch przeciwnika<br>${arg.board}`;
         var socket = io();
         
         socket.on('attack', function(arg){
           if(button.disabled){
             button.disabled = false; 
-            msg.innerHTML = `Twój ruch<br>${arg + 'G'}`;
+            msg.innerHTML = `Twój ruch<br>${arg.board}`;
           }
         })
         button.addEventListener('click', function(){
-          socket.emit('defense', arg);
+          socket.emit('defense', {board: arg.board + 'D'}); // ewidentnie się wykonuje, ale arg jest zawsze nieaktualne?
           button.disabled = true; 
-          msg.innerHTML = "Ruch przeciwnika<br>";
+          msg.innerHTML = `Ruch przeciwnika<br>${arg.board + 'D'}`;
           
         })
         socket.emit('joinn', {id:'<%= context.id %>'});

@@ -1,0 +1,16 @@
+body {
+    background-color: #f0ceae;
+    font-family: "Courier New", serif;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+}
+
+button, textarea {
+    font-family: "Courier New", serif;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
