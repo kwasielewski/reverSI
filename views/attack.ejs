@@ -5,23 +5,25 @@
     <link rel="stylesheet" type="text/css" href="game.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      window.addEventListener('load', function(arg){
+      board= {board:"start"}
+      window.addEventListener('load', function(){
         let button = document.getElementById('myButton');
         let msg = document.getElementById('messages');
         button.disabled = false;
-        msg.innerHTML = `Twój ruch<br>${arg.board}`;
+        msg.innerHTML = `Twój ruch<br>${board.board}`;
         var socket = io();
         
         socket.on('defense', function(arg){
           if(button.disabled){
             button.disabled = false; 
+            board = arg
             msg.innerHTML = `Twój ruch<br>${arg.board}`;
           }
         })
         button.addEventListener('click', function(){
-          socket.emit('attack', {board: arg.board + 'A'});
+          socket.emit('attack', {board: board.board + 'A'});
           button.disabled = true; 
-          msg.innerHTML = `Ruch przeciwnika<br>${arg.board + 'A'}`;
+          msg.innerHTML = `Ruch przeciwnika<br>${board.board + 'A'}`;
           
         })
         socket.emit('joinn', {id:'<%= context.id %>'});

@@ -5,24 +5,26 @@
     <link rel="stylesheet" type="text/css" href="game.css" />
     <script src="/socket.io/socket.io.js"></script>
     <script>
+      board= {board:"start"}
 
-      window.addEventListener('load', function(arg){
+      window.addEventListener('load', function(){
         const button = document.getElementById('myButton');
         const msg = document.getElementById('messages');
         button.disabled = true;
-        msg.innerHTML = `Ruch przeciwnika<br>${arg.board}`;
+        msg.innerHTML = `Ruch przeciwnika<br>${board.board}`;
         var socket = io();
         
         socket.on('attack', function(arg){
           if(button.disabled){
             button.disabled = false; 
+            board = arg
             msg.innerHTML = `Twój ruch<br>${arg.board}`;
           }
         })
         button.addEventListener('click', function(){
-          socket.emit('defense', {board: arg.board + 'D'}); // ewidentnie się wykonuje, ale arg jest zawsze nieaktualne?
+          socket.emit('defense', {board: board.board + 'D'}); // ewidentnie się wykonuje, ale arg jest zawsze nieaktualne?
           button.disabled = true; 
-          msg.innerHTML = `Ruch przeciwnika<br>${arg.board + 'D'}`;
+          msg.innerHTML = `Ruch przeciwnika<br>${board.board + 'D'}`;
           
         })
         socket.emit('joinn', {id:'<%= context.id %>'});
