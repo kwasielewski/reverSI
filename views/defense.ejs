@@ -4,29 +4,32 @@
   <head>
     <link rel="stylesheet" type="text/css" href="game.css" />
     <script src="/socket.io/socket.io.js"></script>
+    <script src="reversi_gameplay.js"></script>
     <script>
-      board= {board:"start"}
+      gameState = {board: initBoard, player: -1};
 
       window.addEventListener('load', function(){
         const button = document.getElementById('myButton');
         const msg = document.getElementById('messages');
         button.disabled = true;
-        msg.innerHTML = `Ruch przeciwnika<br>${board.board}`;
+        msg.innerHTML = `Ruch przeciwnika<br>${gameState.board}`;
         var socket = io();
         
         socket.on('attack', function(arg){
           if(button.disabled){
             button.disabled = false; 
-            board = arg
+            gameState = arg
             msg.innerHTML = `Twój ruch<br>${arg.board}`;
           }
         })
+
         button.addEventListener('click', function(){
-          socket.emit('defense', {board: board.board + 'D'}); // ewidentnie się wykonuje, ale arg jest zawsze nieaktualne?
+          socket.emit('defense', {board: gameState.board, player: (-1)*gameState.player});
           button.disabled = true; 
-          msg.innerHTML = `Ruch przeciwnika<br>${board.board + 'D'}`;
+          msg.innerHTML = `Ruch przeciwnika<br>${gameState.board}`;
           
         })
+        
         socket.emit('joinn', {id:'<%= context.id %>'});
       })
     </script>
@@ -44,6 +47,5 @@
         <button id="myButton">Wykonaj</button>
       <!--</form>-->
     </p>
-    <script src="reversi_gameplay.js"></script>
   </body>
 </html>

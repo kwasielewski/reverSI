@@ -1,4 +1,4 @@
-let initBoard = [[0, 0, 0, 0, 0, 0, 0, 0],
+initBoard = [[0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, -1, 1, 0, 0, 0],
@@ -7,24 +7,46 @@ let initBoard = [[0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0],
                  [0, 0, 0, 0, 0, 0, 0, 0]]  // this initialization has to be connected to some POST method (and used only once)
 
-function checkCell(board, cellID) {
+const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
+
+function checkCell(board, cellRow, cellCol, player) {
     // first recognize what the player clicked
     // see if this cell can be selected according to game rules
+
+    // if (cellRow < 0 || cellRow >= 8 || cellCol < 0 && cellCol >= 8) {
+    //     return false; // cell is outside of range
+    // }
+
+    // if (board[cellRow][cellCol] != 0) {
+    //     return false; // cell is already taken
+    // }
+
+    // for (let i = 0; i < 8; i++) {
+    //     let currentRow = cellRow, currentCol = cellCol;
+    //     const dir = dirs[i];
+    //     while (currentRow >= 0 && currentRow < 8 || currentCol >= 0 && currentCol < 8) {
+            
+    //         currentRow += dir[0];
+    //         currentCol += dir[1];
+    //     }
+    // }
 
     return true;
 }
 
-function selectCell(board, cellID) {
+function selectCell(board, cellRow, cellCol, player) {
     // if the cell is can be selected we:
     //  - draw an appropriate circle
     //  - flip the other discs
     //  - pass the resulting object back to the socket.emit method
 
-    console.log(`Selected cell: ${cellID}`);
+    console.log(`Selected cell: ${cellRow}, ${cellCol}`);
+
+    gameState.board[cellRow][cellCol] = player;
 }
 
-function drawBoard() { //board) {
-    // ideally we would like to move the scipt for drawing the board here so that both attack & defence can use it
+function drawBoard(board, player) {
+    // ideally we would like to move the script for drawing the board here so that both attack & defence can use it
 
     const squareSize = 60;
 
@@ -42,10 +64,10 @@ function drawBoard() { //board) {
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-            if (initBoard[row][col] != 0) {
+            if (board[row][col] != 0) {
                 context.beginPath();
                 context.arc(col*squareSize + squareSize/2, row*squareSize + squareSize/2, 25, 0, 2*Math.PI, false);
-                context.fillStyle = (initBoard[row][col] == -1) ? 'white' : 'black';
+                context.fillStyle = (board[row][col] == -1) ? 'white' : 'black';
                 context.fill();
             }
         }
@@ -56,14 +78,18 @@ function drawBoard() { //board) {
 
     canvas.onclick = function(event) { // TODO: figure out why this works, but addEventListener doesn't?
         // make sure the user clicked somewhere "in range"?
-        let cellRow = Math.floor(event.pageY / squareSize);
-        let cellCol = Math.floor(event.pageX / squareSize);
+        let cellRow = Math.floor(event.pageY / squareSize) - 1;
+        let cellCol = Math.floor(event.pageX / squareSize) - 1;
         console.log('Hello, you clicked!')
-        
-        if (checkCell(initBoard, [cellRow, cellCol])) {
-            selectCell(initBoard, [cellRow, cellCol]);
+
+        if (checkCell(board, cellRow, cellCol, player)) {
+            selectCell(board, cellRow, cellCol, player);
         }
     };
+
+    return board;
 }
 
-window.onload = drawBoard;
+window.onload = function() {
+    drawBoard(gameState.board, gameState.player);
+}

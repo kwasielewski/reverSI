@@ -4,28 +4,32 @@
   <head>
     <link rel="stylesheet" type="text/css" href="game.css" />
     <script src="/socket.io/socket.io.js"></script>
+    <script src="reversi_gameplay.js"></script>
     <script>
-      board= {board:"start"}
+      gameState = {board: initBoard, player: -1};
+
       window.addEventListener('load', function(){
         let button = document.getElementById('myButton');
         let msg = document.getElementById('messages');
         button.disabled = false;
-        msg.innerHTML = `Twój ruch<br>${board.board}`;
+        msg.innerHTML = `Twój ruch<br>${gameState.board}`;
         var socket = io();
         
         socket.on('defense', function(arg){
           if(button.disabled){
             button.disabled = false; 
-            board = arg
-            msg.innerHTML = `Twój ruch<br>${arg.board}`;
+            gameState = arg
+            msg.innerHTML = `Twój ruch<br>${gameState.board}`;
           }
         })
+
         button.addEventListener('click', function(){
-          socket.emit('attack', {board: board.board + 'A'});
+          socket.emit('attack', {board: gameState.board, player: (-1)*gameState.player});
           button.disabled = true; 
-          msg.innerHTML = `Ruch przeciwnika<br>${board.board + 'A'}`;
+          msg.innerHTML = `Ruch przeciwnika<br>${gameState.board}`;
           
         })
+        
         socket.emit('joinn', {id:'<%= context.id %>'});
       })
     </script>
@@ -43,6 +47,5 @@
         <button id="myButton">Wykonaj</button>
       <!--</form>-->
     </p>
-    <script src="reversi_gameplay.js" defer></script>
   </body>
 </html>
