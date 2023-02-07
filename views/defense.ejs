@@ -12,21 +12,21 @@
         const button = document.getElementById('myButton');
         const msg = document.getElementById('messages');
         button.disabled = true;
-        msg.innerHTML = `Ruch przeciwnika<br>${gameState.board}`;
+        msg.innerHTML = "Ruch przeciwnika<br>";
         var socket = io();
         
         socket.on('attack', function(arg){
           if(button.disabled){
             button.disabled = false; 
             gameState = arg
-            msg.innerHTML = `Twój ruch<br>${arg.board}`;
+            msg.innerHTML = "Twój ruch<br>";
           }
         })
 
         button.addEventListener('click', function(){
           socket.emit('defense', {board: gameState.board, player: (-1)*gameState.player});
           button.disabled = true; 
-          msg.innerHTML = `Ruch przeciwnika<br>${gameState.board}`;
+          msg.innerHTML = "Ruch przeciwnika<br>";
           
         })
         

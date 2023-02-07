@@ -13,7 +13,7 @@
         let msg = document.getElementById('messages');
         let match = document.getElementById('match');
         button.disabled = false;
-        msg.innerHTML = `Twój ruch<br>${gameState.board}`;
+        msg.innerHTML = "Twój ruch<br>";
         var socket = io();
         
         socket.on('defense', function(arg){
@@ -21,14 +21,14 @@
             button.disabled = false; 
             gameState = arg
             match.innerHTML = `<%= context.attacker %> vs ${arg.defender}`;
-            msg.innerHTML = `Twój ruch<br>${gameState.board}`;
+            msg.innerHTML = "Twój ruch<br>";
           }
         })
 
         button.addEventListener('click', function(){
           socket.emit('attack', {board: gameState.board, player: (-1)*gameState.player});
           button.disabled = true; 
-          msg.innerHTML = `Ruch przeciwnika<br>${gameState.board}`;
+          msg.innerHTML = "Ruch przeciwnika<br>";
           
         })
         
