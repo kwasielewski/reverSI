@@ -70,16 +70,27 @@ app.get('/attack', function(req, res){
 
 app.post('/join', function(req, res){
   console.log("in join")
-  
+  cuartito = 0
+  idd =-1
   console.log(req.body.identifier)
-  cuartito = rooms.get(parseInt(req.body.identifier))
+  if(!req.body.identifier){
+    console.log("from list")
+    console.log(req.body)
+    console.log(req.body.r[0])
+    cuartito = rooms.get(parseInt(req.body.r[0]))
+    idd = parseInt(req.body.r[0])
+  }else{
+    cuartito = rooms.get(parseInt(req.body.identifier))
+    idd = parseInt(req.body.identifier)
+  }
+  
   console.log(rooms)
   console.log(cuartito)
   if(!cuartito || cuartito.players == 2){
     console.log("too many players")
     res.render('main', context)
   }else{
-    context = {id:parseInt(req.body.identifier)}
+    context = {id:idd}
     res.render('password', context);//???
   }
 })
@@ -87,14 +98,25 @@ app.post('/join', function(req, res){
 app.post('/joinwithpasswd', function(req, res){
   console.log('in joinwith passwd')
   console.log(context)
+  cuartito = 0
+  idd = -1
+
+  console.log(req.body.identifier)
   cuartito = rooms.get(parseInt(context.id))
+  idd = parseInt(context.id)
   pswd = cuartito['pass']
   if(req.body.password == pswd){
-    rooms.set(rooms.set(parseInt(context.id), {pass:pswd, players:2}))
+    rooms.set(rooms.set(idd, {pass:pswd, players:2}))
     res.render('defense', context)
   }else{
     res.render('password', context)
   }
+})
+app.get('/select', function(req, res){
+  avaiblerooms = [...rooms].filter(([k, v])=> v['players']==1)
+  numrooms = avaiblerooms.length
+  context = {rooms:avaiblerooms, count:numrooms}
+  res.render('rooms', context)
 })
 
 server.listen(process.env.PORT || 3000);

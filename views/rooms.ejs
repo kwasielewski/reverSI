@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dostępne pokoje</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    input {
+      display: block;
+    }
+  </style>
+  <script>
+
+  </script>
+</head>
+<body>
+    <p>Dostępne pokoje</p>
+    
+    <% for (let i = 0; i < context.count; i++) { %>
+        <form action="/join", method="POST">
+        <label for="r<%= i %>">Pokój  <%= context.rooms[i][0] %> </label>
+        <input id="r<%= i %>" type="number" name="r[<%= i %>]" value="<%= context.rooms[i][0] %>" >
+        <button>Click</button>
+        </form>
+        <% } %>
+
+</body>
+</html>
