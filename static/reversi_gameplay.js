@@ -1,39 +1,45 @@
 initBoard = [[0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, -1, 1, 0, 0, 0],
-                 [0, 0, 0, 1, -1, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0],
-                 [0, 0, 0, 0, 0, 0, 0, 0]]  // this initialization has to be connected to some POST method (and used only once)
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, -1, 1, 0, 0, 0],
+             [0, 0, 0, 1, -1, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0],
+             [0, 0, 0, 0, 0, 0, 0, 0]];
 
 const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, 1], [1, 1], [1, 0], [1, -1], [0, -1]];
 
 const squareSize = 60;
 
+function isInRange(cellRow, cellCol) {
+    return cellRow >= 0 && cellRow < 8 && cellCol >= 0 && cellCol < 8;
+}
+
 function checkCell(cellRow, cellCol) {
     // first recognize what the player clicked
     // see if this cell can be selected according to game rules
 
-    if (cellRow < 0 || cellRow >= 8 || cellCol < 0 && cellCol >= 8) {
-        return false; // cell is outside of range
+    if (!isInRange(cellRow, cellCol) || gameState.board[cellRow][cellCol] != 0) {
+        return false; // cell is outside of range or non-empty
     }
 
-    if (gameState.board[cellRow][cellCol] != 0) {
-        return false; // cell is already taken
+    for (let i = 0; i < 8; i++) {
+        const dir = dirs[i];
+        let currentRow = cellRow + dir[0], currentCol = cellCol + dir[1];
+        let oppositeTiles = 0;
+
+        while (isInRange(currentRow, currentCol) && gameState.board[currentRow][currentCol] == -gameState.player) {
+            oppositeTiles += 1;
+            currentRow += dir[0];
+            currentCol += dir[1];
+        }
+
+        if (isInRange(currentRow, currentCol) && gameState.board[currentRow][currentCol] == gameState.player && oppositeTiles) {
+            return true;
+        }
     }
 
-    // for (let i = 0; i < 8; i++) {
-    //     let currentRow = cellRow, currentCol = cellCol;
-    //     const dir = dirs[i];
-    //     while (currentRow >= 0 && currentRow < 8 || currentCol >= 0 && currentCol < 8) {
-            
-    //         currentRow += dir[0];
-    //         currentCol += dir[1];
-    //     }
-    // }
-
-    return true;
+    return false;
 }
 
 function selectCell(cellRow, cellCol) {
@@ -45,11 +51,32 @@ function selectCell(cellRow, cellCol) {
     console.log(`Selected cell: ${cellRow}, ${cellCol}`);
 
     gameState.board[cellRow][cellCol] = gameState.player;
+
+    let tilesToFlip = [];
+
+    for (let i = 0; i < 8; i++) {
+        const dir = dirs[i];
+        let currentRow = cellRow + dir[0], currentCol = cellCol + dir[1];
+        let oppositeTiles = [];
+
+        while (isInRange(currentRow, currentCol) && gameState.board[currentRow][currentCol] == -gameState.player) {
+            oppositeTiles.push([currentRow, currentCol]);
+            currentRow += dir[0];
+            currentCol += dir[1];
+        }
+
+        if (isInRange(currentRow, currentCol) && gameState.board[currentRow][currentCol] == gameState.player && oppositeTiles) {
+            tilesToFlip.push(...oppositeTiles);
+        }
+    }
+
+    for (let i = 0; i < tilesToFlip.length; i++) {
+        const tileCoords = tilesToFlip[i];
+        gameState.board[tileCoords[0]][tileCoords[1]] = gameState.player;
+    }
 }
 
 function drawBoard() {
-    // ideally we would like to move the script for drawing the board here so that both attack & defence can use it
-
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
             context.fillStyle = ((row + col) % 2 == 0) ? 'grey' : 'lightgrey';
@@ -72,8 +99,6 @@ function drawBoard() {
 
     context.strokeStyle = 'black';
     context.strokeRect(0, 0, squareSize*8, squareSize*8)
-
-    // return board;
 }
 
 function handleTurn() {
@@ -85,7 +110,7 @@ function handleTurn() {
 
     drawBoard();
     
-    canvas.onclick = function(event) {
+    canvas.addEventListener('click', function(event) {
         // make sure the user clicked somewhere "in range"?
         const offset = canvas.getBoundingClientRect();
 
@@ -98,7 +123,7 @@ function handleTurn() {
         }
 
         drawBoard();
-    };
+    });
 }
 
 window.onload = handleTurn;
