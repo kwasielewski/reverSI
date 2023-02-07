@@ -15,13 +15,13 @@ function checkCell(cellRow, cellCol) {
     // first recognize what the player clicked
     // see if this cell can be selected according to game rules
 
-    // if (cellRow < 0 || cellRow >= 8 || cellCol < 0 && cellCol >= 8) {
-    //     return false; // cell is outside of range
-    // }
+    if (cellRow < 0 || cellRow >= 8 || cellCol < 0 && cellCol >= 8) {
+        return false; // cell is outside of range
+    }
 
-    // if (board[cellRow][cellCol] != 0) {
-    //     return false; // cell is already taken
-    // }
+    if (gameState.board[cellRow][cellCol] != 0) {
+        return false; // cell is already taken
+    }
 
     // for (let i = 0; i < 8; i++) {
     //     let currentRow = cellRow, currentCol = cellCol;
@@ -77,6 +77,8 @@ function drawBoard() {
 }
 
 function handleTurn() {
+    // first check for end of game!
+    // if the game's finished display the score and an appropriate message
 
     let canvas = document.getElementById('canvasBoard');
     context = canvas.getContext('2d');
@@ -85,8 +87,10 @@ function handleTurn() {
     
     canvas.onclick = function(event) {
         // make sure the user clicked somewhere "in range"?
-        let cellRow = Math.floor(event.pageY / squareSize) - 1;
-        let cellCol = Math.floor(event.pageX / squareSize) - 1;
+        const offset = canvas.getBoundingClientRect();
+
+        let cellRow = Math.floor((event.pageY - offset.y) / squareSize);
+        let cellCol = Math.floor((event.pageX - offset.x) / squareSize);
         console.log('Hello, you clicked!')
 
         if (checkCell(cellRow, cellCol)) {
