@@ -11,6 +11,7 @@
       window.addEventListener('load', function(){
         let button = document.getElementById('myButton');
         let msg = document.getElementById('messages');
+        let match = document.getElementById('match');
         button.disabled = false;
         msg.innerHTML = `Twój ruch<br>${gameState.board}`;
         var socket = io();
@@ -19,6 +20,7 @@
           if(button.disabled){
             button.disabled = false; 
             gameState = arg
+            match.innerHTML = `<%= context.attacker %> vs ${arg.defender}`;
             msg.innerHTML = `Twój ruch<br>${gameState.board}`;
           }
         })
@@ -37,6 +39,9 @@
   <body>
     <p>
       ID twojego pokoju <%= context.id %>
+    </p>
+    <p>
+      <div id='match'></div>
     </p>
     <p>
       <div id='messages'></div>

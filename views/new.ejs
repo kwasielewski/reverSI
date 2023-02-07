@@ -12,6 +12,9 @@
   </p>
   <p> 
     <form action="/create", method="POST">
+      <label for="nick">Nick</label>
+      <input id="nick" type="text" name="nick" value="<%= context.nick%>">
+      <br>
       <label for="password">Hasło</label>
       <input id="password" type="text" name="password" value="<%= context.password%>">
       

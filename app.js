@@ -60,7 +60,10 @@ app.post('/create', function(req, res){
     //console.log(context.password)
     console.log(req.body)
     console.log(context.id)
-  rooms.set(context.id, {pass:req.body.password, players:1})
+    
+    attacker = req.body.nick =="" ? "guest" : req.body.nick
+  rooms.set(context.id, {pass:req.body.password, players:1, attacker:attacker, defender:"guest"})
+  context['attacker'] = attacker
   res.render('attack', context)
 })
 
@@ -105,8 +108,12 @@ app.post('/joinwithpasswd', function(req, res){
   cuartito = rooms.get(parseInt(context.id))
   idd = parseInt(context.id)
   pswd = cuartito['pass']
+  attacker = cuartito['attacker']
+  defender = req.body.nick == "" ? "guest" : req.body.nick
+  context['attacker'] = attacker
+  context['defender'] = defender
   if(req.body.password == pswd){
-    rooms.set(rooms.set(idd, {pass:pswd, players:2}))
+    rooms.set(rooms.set(idd, {pass:pswd, players:2, attacker:attacker, defender:defender}))
     res.render('defense', context)
   }else{
     res.render('password', context)
@@ -137,6 +144,8 @@ io.on('connection', function(socket) {
   })
   socket.on('defense', function(data){
     //io.emit('defense', data)
+    data.defender = rooms.get(parseInt(idd))['defender']
+    console.log(rooms.get(parseInt(idd)))
     socket.to(idd).emit('defense', data);
   })
 });
