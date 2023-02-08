@@ -18,6 +18,7 @@ app.set('view engine', 'ejs');
 
 
 let rooms = new Map();
+let boardStates = new Map();
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(session({resave:true, saveUninitialized:true, secret:'sdfgzdfh'}))
 app.use( express.static('./static'));
@@ -130,6 +131,7 @@ server.listen(process.env.PORT || 3000);
 
 io.on('connection', function(socket) {
   console.log('client connected:' + socket.id);
+
   //join
   let idd = "";
   socket.on('joinn', function(data){
@@ -137,10 +139,22 @@ io.on('connection', function(socket) {
     console.log(data.id)
     socket.join(data.id);
     idd = data.id;
+    v = boardStates.get(idd)
+    console.log("getting state")
+    console.log(v)
+    if(v){
+      socket.emit('attack', v)    
+    }
   })
+
   socket.on('attack', function(data) {
     //io.emit('attack', data); // do wszystkich
     //potencjalne miejsce na walidację
+    v = boardStates.get(idd)
+    if(!v){
+      console.log("set state")
+      boardStates.set(idd, data)
+    }
     socket.to(idd).emit('attack', data);// tylko do połączonego
   })
   socket.on('defense', function(data){

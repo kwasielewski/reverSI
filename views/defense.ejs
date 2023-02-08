@@ -19,6 +19,8 @@
         socket.on('attack', function(arg){
           if(button.disabled){
             button.disabled = false; 
+            console.log(arg)
+            console.log(gameState)
             gameState = arg
             whiteCount = gameState.board.flat().filter(el => el==-1).length
             blackCount = gameState.board.flat().filter(el => el==1).length
