@@ -113,7 +113,7 @@ app.post('/joinwithpasswd', function(req, res){
   context['attacker'] = attacker
   context['defender'] = defender
   if(req.body.password == pswd){
-    rooms.set(rooms.set(idd, {pass:pswd, players:2, attacker:attacker, defender:defender}))
+    rooms.set(idd, {pass:pswd, players:2, attacker:attacker, defender:defender})
     res.render('defense', context)
   }else{
     res.render('password', context)
@@ -140,12 +140,14 @@ io.on('connection', function(socket) {
   })
   socket.on('attack', function(data) {
     //io.emit('attack', data); // do wszystkich
+    //potencjalne miejsce na walidację
     socket.to(idd).emit('attack', data);// tylko do połączonego
   })
   socket.on('defense', function(data){
     //io.emit('defense', data)
     data.defender = rooms.get(parseInt(idd))['defender']
     console.log(rooms.get(parseInt(idd)))
+    //potencjalne miejsce na walidację
     socket.to(idd).emit('defense', data);
   })
 });

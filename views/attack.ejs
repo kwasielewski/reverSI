@@ -6,12 +6,14 @@
     <script src="/socket.io/socket.io.js"></script>
     <script src="reversi_gameplay.js"></script>
     <script>
+
       gameState = {board: initBoard, player: -1};
 
       window.addEventListener('load', function(){
         let button = document.getElementById('myButton');
         let msg = document.getElementById('messages');
         let match = document.getElementById('match');
+        let score = document.getElementById('score');
         button.disabled = false;
         msg.innerHTML = "Twój ruch (białe)<br>";
         var socket = io();
@@ -21,6 +23,9 @@
             button.disabled = false; 
             gameState = arg
             match.innerHTML = `<%= context.attacker %> vs ${arg.defender}`;
+            whiteCount = gameState.board.flat().filter(el => el==-1).length
+            blackCount = gameState.board.flat().filter(el => el==1).length
+            score.innerHTML = `białe: ${whiteCount} czarne: ${blackCount}`;
             msg.innerHTML = "Twój ruch (białe)<br>";
           }
         })
@@ -28,10 +33,17 @@
         button.addEventListener('click', function(){
           socket.emit('attack', {board: gameState.board, player: (-1)*gameState.player});
           button.disabled = true; 
+          console.log(gameState.board.flat())
+          console.log(gameState.board.flat().filter(el => el==-1))
+          whiteCount = gameState.board.flat().filter(el => el==-1).length
+          blackCount = gameState.board.flat().filter(el => el==1).length
+          score.innerHTML = `białe: ${whiteCount} czarne: ${blackCount}`;
           msg.innerHTML = "Ruch przeciwnika<br>";
           
         })
-        
+        whiteCount = gameState.board.flat().filter(el => el==-1).length
+        blackCount = gameState.board.flat().filter(el => el==1).length
+        score.innerHTML = `białe: ${whiteCount} czarne: ${blackCount}`;
         socket.emit('joinn', {id:'<%= context.id %>'});
       })
     </script>
@@ -52,5 +64,8 @@
       <!--</form>-->
     </p>
     <button id="myButton">Wykonaj</button>
+    <p>
+      <div id='score'></div>
+    </p>
   </body>
 </html>
