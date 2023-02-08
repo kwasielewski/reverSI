@@ -33,6 +33,7 @@
 
         button.addEventListener('click', function(){
           socket.emit('attack', {board: gameState.board, player: (-1)*gameState.player});
+          madeMove = false;
           button.disabled = true; 
           console.log(gameState.board.flat())
           console.log(gameState.board.flat().filter(el => el==-1))

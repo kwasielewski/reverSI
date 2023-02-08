@@ -107,6 +107,7 @@ function handleTurn() {
 
     let canvas = document.getElementById('canvasBoard');
     context = canvas.getContext('2d');
+    madeMove = false;
 
     drawBoard();
     
@@ -118,7 +119,8 @@ function handleTurn() {
         let cellCol = Math.floor((event.pageX - offset.x) / squareSize);
         console.log('Hello, you clicked!')
 
-        if (checkCell(cellRow, cellCol)) {
+        if (checkCell(cellRow, cellCol) && !madeMove) {
+            madeMove = true;
             selectCell(cellRow, cellCol);
         }
 
