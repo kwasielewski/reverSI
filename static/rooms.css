@@ -1,0 +1,22 @@
+body {
+    background-color: #a7aed2;
+    font-family: "Courier New", serif;
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    padding: 20px;
+}
+
+button, textarea, input {
+    font-family: "Courier New", serif;
+}
+
+html {
+    display: table;
+    margin: auto;
+}
+
+label, input {
+    margin-top: 20px;
+    margin-right: 10px;
+}
