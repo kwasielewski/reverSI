@@ -4,6 +4,7 @@ body {
     display: table-cell;
     vertical-align: middle;
     text-align: center;
+    padding: 20px;
 }
 
 button, textarea {

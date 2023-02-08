@@ -13,7 +13,7 @@
         const msg = document.getElementById('messages');
         let score = document.getElementById('score');
         button.disabled = true;
-        msg.innerHTML = "Ruch przeciwnika<br>";
+        msg.innerHTML = "<b>Ruch przeciwnika</b><br>";
         var socket = io();
         
         socket.on('attack', function(arg){
@@ -21,28 +21,30 @@
             button.disabled = false; 
             console.log(arg)
             console.log(gameState)
-            gameState = arg
-            whiteCount = gameState.board.flat().filter(el => el==-1).length
-            blackCount = gameState.board.flat().filter(el => el==1).length
-            score.innerHTML = `białe: ${whiteCount} czarne: ${blackCount}`;
-            msg.innerHTML = "Twój ruch (czarne)<br>";
+            gameState = arg;
+            whiteCount = gameState.board.flat().filter(el => el==-1).length;
+            blackCount = gameState.board.flat().filter(el => el==1).length;
+            score.innerHTML = `Białe: ${whiteCount} | Czarne: ${blackCount}`;
+            msg.innerHTML = "<b>Twój ruch (czarne)</b><br>";
             drawBoard();
           }
         })
 
         button.addEventListener('click', function(){
-          socket.emit('defense', {board: gameState.board, player: (-1)*gameState.player});
-          madeMove = false;
-          button.disabled = true; 
-          whiteCount = gameState.board.flat().filter(el => el==-1).length
-          blackCount = gameState.board.flat().filter(el => el==1).length
-          score.innerHTML = `białe: ${whiteCount} czarne: ${blackCount}`;
-          msg.innerHTML = "Ruch przeciwnika<br>";
-          
+          if (madeMove) {
+            socket.emit('defense', {board: gameState.board, player: (-1)*gameState.player});
+            madeMove = false;
+            button.disabled = true; 
+            whiteCount = gameState.board.flat().filter(el => el==-1).length;
+            blackCount = gameState.board.flat().filter(el => el==1).length;
+            score.innerHTML = `Białe: ${whiteCount} | Czarne: ${blackCount}`;
+            msg.innerHTML = "<b>Ruch przeciwnika</b><br>";
+          }
         })
-        whiteCount = gameState.board.flat().filter(el => el==-1).length
-        blackCount = gameState.board.flat().filter(el => el==1).length
-        score.innerHTML = `białe: ${whiteCount} czarne: ${blackCount}`;
+
+        whiteCount = gameState.board.flat().filter(el => el==-1).length;
+        blackCount = gameState.board.flat().filter(el => el==1).length;
+        score.innerHTML = `Białe: ${whiteCount} | Czarne: ${blackCount}`;
         socket.emit('joinn', {id:'<%= context.id %>'});
       })
     </script>
