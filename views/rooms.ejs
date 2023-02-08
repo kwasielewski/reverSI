@@ -23,8 +23,8 @@
     <% for (let i = 0; i < context.count; i++) { %>
         <form action="/join", method="POST">
         <label for="r<%= i %>">Pokój  <%= context.rooms[i][0] %> </label>
-        <input id="r<%= i %>" type="number" name="r[<%= i %>]" value="<%= context.rooms[i][0] %>" >
-        <button>Click</button>
+        <input id="r<%= i %>" type="number" name="r[<%= i %>]" value="<%= context.rooms[i][0] %>" readonly>
+        <button>Dołącz</button>
         </form>
         <% } %>
 
